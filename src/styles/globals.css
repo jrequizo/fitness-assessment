@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+body {
+    height: 100%;
+}
+
+#__next {
+    height: 100%;
+}
+
+.spacer {
+    aspect-ratio: 960/101;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.layer1 {
+    background-image: url("../../public/layered-waves.svg");
+}
+
+@layer base {
+
+    input[type='number']::-webkit-outer-spin-button,
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number'] {
+        -webkit-appearance: none;
+        margin: 0;
+        -moz-appearance: textfield !important;
+    }
+}
+
+.auto-hide {
+    animation: cssAnimation 0s 5s forwards;
+    visibility: visible;
+}
+
+@keyframes cssAnimation {
+    to {
+        visibility: hidden;
+    }
+}
