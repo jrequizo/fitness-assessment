@@ -30,3 +30,21 @@ export const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
         </div>
     )
 }
+
+export const SidebarInstance: React.FC = () => {
+    return (
+        <Sidebar
+        basePath="/admin"
+        components={[
+            {
+                title: "Home",
+                path: "/home"
+            },
+            {
+                title: "Form Results",
+                path: "/results"
+            }
+        ]}
+    />
+    )
+}

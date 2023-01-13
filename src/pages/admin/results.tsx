@@ -6,12 +6,15 @@ import { useRouter } from "next/router";
 
 import { useSession } from "next-auth/react";
 
+import moment from 'moment';
+
 import NavigationHeader from "../../components/header";
-import { Sidebar } from "../../components/sidebar";
+import { SidebarInstance } from "../../components/sidebar";
 
 import { api } from "../../utils/api";
 import { Form } from "@prisma/client";
 import { Column, useTable } from "react-table";
+import { CircleNotch } from "phosphor-react";
 
 const Result: NextPage = () => {
     const { status } = useSession();
@@ -22,18 +25,17 @@ const Result: NextPage = () => {
 
     const [data, setData] = React.useState<Form[]>([]);
 
-    api.form.get.useQuery({
+    const { isLoading } = api.form.get.useQuery({
         page: page,
         count: count
     }, {
-        onSuccess: setData,
+        // onSuccess: setData,
+        onSuccess: (data) => {
+            setData([...data, ...data, ...data])
+        },
     });
 
     const columns: Column[] = React.useMemo(() => [
-        {
-            Header: "User ID",
-            accessor: "id"
-        },
         {
             Header: "First Name",
             accessor: "givenName"
@@ -42,12 +44,13 @@ const Result: NextPage = () => {
             Header: "Last Name",
             accessor: "surname"
         },
+
         {
             id: "dob",
-            Header: "Date of Birth",
+            Header: "D.O.B",
             accessor: (row) => {
                 // Convert to a string object
-                return (row as Form).dob.toISOString();
+                return moment((row as Form).dob).format("YYYY-MM-DD");
             },
         },
         {
@@ -83,25 +86,19 @@ const Result: NextPage = () => {
                 <div className=" flex-1 flex flex-row ">
                     {/** Sidebar */}
                     <div className="flex flex-col">
-                        <Sidebar
-                            basePath="/admin"
-                            components={[
-                                {
-                                    title: "Home",
-                                    path: "/home"
-                                },
-                                {
-                                    title: "Result",
-                                    path: "/results"
-                                }
-                            ]}
-                        />
+                        <SidebarInstance />
                     </div>
 
                     {/** Main Body */}
-                    <div className="flex flex-col flex-1 justify-center items-center">
+                    <div className="flex flex-col flex-1 p-4">
 
-                        <Table columns={columns} data={data} />
+                        {isLoading ?
+                            // Simple loading icon while the table data is fetched
+                            <div className="w-full h-full flex items-center justify-center">
+                                <CircleNotch size={64} weight="bold" className="animate-spin" />
+                            </div> :
+                            <Table columns={columns} data={data} />
+                        }
 
                     </div>
                 </div>
@@ -130,8 +127,8 @@ const Table: React.FC<TableProps> = <T extends object>(props: TableProps<T>) => 
 
     return (
         // apply the table props
-        <table {...getTableProps()}>
-            <thead>
+        <table {...getTableProps()} className="">
+            <thead className="text-left">
 
                 {// Loop over the header rows
                     headerGroups.map(headerGroup => (
@@ -140,13 +137,20 @@ const Table: React.FC<TableProps> = <T extends object>(props: TableProps<T>) => 
                         <tr {...headerGroup.getHeaderGroupProps()}>
 
                             {// Loop over the headers in each row
-                                headerGroup.headers.map(column => (
+                                headerGroup.headers.map((column, index) => (
 
                                     // Apply the header cell props
-                                    <th {...column.getHeaderProps()}>
+                                    <th {...column.getHeaderProps()}
+                                        className={`
+                                            bg-slate-800 text-white p-1 pl-4 font-medium
+                                            ${index == 0 && "rounded-tl-lg"} 
+                                            ${index == headerGroup.headers.length - 1 && "rounded-tr-lg"}
+                                        `}>
 
-                                        {// Render the header
-                                            column.render('Header')}
+                                        {
+                                            // Render the header
+                                            column.render('Header')
+                                        }
 
                                     </th>
                                 ))}
@@ -158,7 +162,7 @@ const Table: React.FC<TableProps> = <T extends object>(props: TableProps<T>) => 
             <tbody {...getTableBodyProps()}>
 
                 {// Loop over the table rows
-                    rows.map(row => {
+                    rows.map((row, rowIndex) => {
 
                         // Prepare the row for display
                         prepareRow(row)
@@ -168,14 +172,23 @@ const Table: React.FC<TableProps> = <T extends object>(props: TableProps<T>) => 
                             <tr {...row.getRowProps()}>
 
                                 {// Loop over the rows cells
-                                    row.cells.map(cell => {
+                                    row.cells.map((cell, cellIndex) => {
 
                                         // Apply the cell props
                                         return (
-                                            <td {...cell.getCellProps()}>
+                                            <td {...cell.getCellProps()}
+                                                className={`
+                                                    p-1 pl-4 font-light
+                                                    ${(rowIndex % 2 == 0 && "bg-slate-100")}
+                                                    ${(rowIndex == rows.length - 1 && cellIndex == row.cells.length - 1) && "rounded-br-lg"}
+                                                    ${(rowIndex == rows.length - 1 && cellIndex == 0) && "rounded-bl-lg"}
+                                                `}
+                                            >
 
-                                                {// Render the cell contents
-                                                    cell.render('Cell')}
+                                                {
+                                                    // Render the cell contents
+                                                    cell.render('Cell')
+                                                }
                                             </td>
                                         )
                                     })}

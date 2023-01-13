@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
 import NavigationHeader from "../../components/header";
 
-import { Sidebar } from "../../components/sidebar";
+import { SidebarInstance } from "../../components/sidebar";
 
 
 const Home: NextPage = () => {
@@ -33,19 +33,7 @@ const Home: NextPage = () => {
                 <div className=" flex-1 flex flex-row ">
                     {/** Sidebar */}
                     <div className="flex flex-col">
-                        <Sidebar
-                            basePath="/admin"
-                            components={[
-                                {
-                                    title: "Home",
-                                    path: "/home"
-                                },
-                                {
-                                    title: "Result",
-                                    path: "/results"
-                                }
-                            ]}
-                        />
+                        <SidebarInstance/>
                     </div>
                     <div className="h-full w-full p-4">
                         <div className="h-full flex flex-col flex-1 items-start">
