@@ -31,6 +31,22 @@ const Login: NextPage<LoginFormProps> = ({ csrfToken }) => {
 
     const [loginErrors, setLoginErrors] = React.useState(false);
 
+    // const createUser = api.admin.registerUser.useMutation();
+
+    // async function login(event: React.MouseEvent<HTMLButtonElement>) {
+    //     setIsLoading(true);
+    //     event.preventDefault();
+        
+    //     const response = createUser.mutate({
+    //         email: getValues().email,
+    //         password: getValues().password
+    //     });
+
+    //     console.log(response);
+
+    //     setIsLoading(false);
+    // }
+
     async function login(event: React.MouseEvent<HTMLButtonElement>) {
         setIsLoading(true);
         event.preventDefault();

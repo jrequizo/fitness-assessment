@@ -47,7 +47,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         const passwordHash = createHmac('sha256', HASH_SECRET).update(credentials.password).digest('hex');
-        
+
         const userCredentials = await prisma.user.findFirst({
           where: {
             AND: [
