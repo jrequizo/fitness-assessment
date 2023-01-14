@@ -18,13 +18,20 @@ import { CaretDoubleLeft, CaretDoubleRight, CaretLeft, CaretRight, CircleNotch }
 import Link from "next/link";
 
 const Result: NextPage = () => {
+
+    const context = api.useContext();
+
     const { status } = useSession();
     const router = useRouter();
 
     const [page, setPage] = React.useState(1);
-    const [count, setCount] = React.useState(200);
+    const [count, setCount] = React.useState(25);
 
     const [data, setData] = React.useState<Form[]>([]);
+
+    const [total, setTotal] = React.useState(0);
+
+    api.form.getCount.useQuery(undefined, { onSuccess: setTotal });
 
     const { isLoading } = api.form.get.useQuery({
         page: page,
@@ -92,6 +99,30 @@ const Result: NextPage = () => {
         }
     }, [status]);
 
+    const totalPages = React.useMemo(() => {
+        return Math.ceil(total / count);
+    }, [total, count]);
+
+    function nextPage() {
+        if (page < totalPages) {
+            setPage(prev => prev + 1);
+        }
+    }
+
+    function previousPage() {
+        if (page > 0) {
+            setPage(prev => prev - 1);
+        }
+    }
+
+    function firstPage() {
+        setPage(1);
+    }
+
+    function lastPage() {
+        setPage(totalPages);
+    }
+
     return (
         <>
             <Head>
@@ -111,21 +142,49 @@ const Result: NextPage = () => {
                     {/** Main Body */}
                     <div className="flex flex-col flex-1 p-4">
                         <div className="flex flex-row justify-center space-x-2 mb-2">
-                            <button className="border rounded bg-slate-800 border-slate-800 aspect-square flex justify-center items-center hover:bg-slate-600 hover:border-slate-600">
-                                <CaretDoubleLeft size={16} color="#FFFFFF" weight="bold"/>
+                            <button
+                                className="border rounded bg-slate-800 border-slate-800 aspect-square flex justify-center items-center hover:bg-slate-600 hover:border-slate-600"
+                                onClick={firstPage}
+                            >
+                                <CaretDoubleLeft size={16} color="#FFFFFF" weight="bold" />
                             </button>
-                            <button className="border rounded bg-slate-800 border-slate-800 aspect-square flex justify-center items-center hover:bg-slate-600 hover:border-slate-600">
-                                <CaretLeft size={16} color="#FFFFFF"/>
+                            <button
+                                className="border rounded bg-slate-800 border-slate-800 aspect-square flex justify-center items-center hover:bg-slate-600 hover:border-slate-600"
+                                onClick={previousPage}
+                            >
+                                <CaretLeft size={16} color="#FFFFFF" />
                             </button>
 
                             <div className="flex flex-row space-x-2">
                                 <p>Page: </p>
-                                <select>
-                                    <option value={1}>1</option>
+                                <select
+                                    onChange={(event) => {
+                                        const { value } = event.target;
+
+                                        setPage(parseInt(value));
+                                        context.form.get.invalidate();
+
+                                    }}
+                                    value={page}
+                                >
+                                    {
+                                        [...Array(totalPages)].map((value, index) => {
+                                            return <option value={index + 1}>{index + 1}</option>
+                                        })
+                                    }
                                 </select>
+                                <p> / {totalPages}</p>
                                 <p className="text-gray-100">|</p>
                                 <p>Per page: </p>
-                                <select>
+                                <select
+                                    onChange={(event) => {
+                                        const { value } = event.target;
+
+                                        setCount(parseInt(value));
+                                        context.form.get.invalidate();
+                                    }}
+                                    value={count}
+                                >
                                     <option value={25}>25</option>
                                     <option value={50}>50</option>
                                     <option value={75}>75</option>
@@ -133,11 +192,17 @@ const Result: NextPage = () => {
                                 </select>
                             </div>
 
-                            <button className="border rounded bg-slate-800 border-slate-800 aspect-square flex justify-center items-center hover:bg-slate-600 hover:border-slate-600">
-                                <CaretRight size={16} color="#FFFFFF"/>
+                            <button
+                                className="border rounded bg-slate-800 border-slate-800 aspect-square flex justify-center items-center hover:bg-slate-600 hover:border-slate-600"
+                                onClick={nextPage}
+                            >
+                                <CaretRight size={16} color="#FFFFFF" />
                             </button>
-                            <button className="border rounded bg-slate-800 border-slate-800 aspect-square flex justify-center items-center hover:bg-slate-600 hover:border-slate-600">
-                                <CaretDoubleRight size={16} color="#FFFFFF" weight="bold"/>
+                            <button
+                                className="border rounded bg-slate-800 border-slate-800 aspect-square flex justify-center items-center hover:bg-slate-600 hover:border-slate-600"
+                                onClick={lastPage}
+                            >
+                                <CaretDoubleRight size={16} color="#FFFFFF" weight="bold" />
                             </button>
                         </div>
                         {isLoading ?
