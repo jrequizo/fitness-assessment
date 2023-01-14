@@ -11,6 +11,8 @@ import { CircleNotch } from "phosphor-react";
 
 import NavigationHeader from "../../components/header";
 
+import { api } from "../../utils/api";
+
 
 interface LoginFormProps {
     csrfToken: string
@@ -31,21 +33,16 @@ const Login: NextPage<LoginFormProps> = ({ csrfToken }) => {
 
     const [loginErrors, setLoginErrors] = React.useState(false);
 
-    // const createUser = api.admin.registerUser.useMutation();
+    const registerUser = api.admin.registerUser.useMutation();
 
-    // async function login(event: React.MouseEvent<HTMLButtonElement>) {
-    //     setIsLoading(true);
-    //     event.preventDefault();
+    async function create(event: React.MouseEvent<HTMLButtonElement>) {
+        setIsLoading(true);
+        event.preventDefault();
         
-    //     const response = createUser.mutate({
-    //         email: getValues().email,
-    //         password: getValues().password
-    //     });
+        await registerUser.mutate();
 
-    //     console.log(response);
-
-    //     setIsLoading(false);
-    // }
+        setIsLoading(false);
+    }
 
     async function login(event: React.MouseEvent<HTMLButtonElement>) {
         setIsLoading(true);
@@ -126,6 +123,14 @@ const Login: NextPage<LoginFormProps> = ({ csrfToken }) => {
                         <button className="border rounded border-slate-800 px-2 py-1 bg-slate-800 text-white hover:bg-slate-600 hover:border-slate-600 transition disabled:bg-slate-200 disabled:border-slate-200" onClick={login} disabled={isLoading}>Sign In</button>
                         {isLoading && <div className="px-2"><CircleNotch size={32} className="animate-spin" /></div>}
                     </div>
+
+                    <p>Press the button below to generate the admin account if it does not exist.</p>
+                    <button 
+                    className="mt-2 border rounded border-slate-800 px-2 py-1 bg-slate-800 text-white hover:bg-slate-600 hover:border-slate-600 transition disabled:bg-slate-200 disabled:border-slate-200"
+                     onClick={create} 
+                     disabled={isLoading}
+                     >Create Admin Account</button>
+                        
                     
                 </div>
             </main>
