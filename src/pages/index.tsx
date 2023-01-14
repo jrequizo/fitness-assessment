@@ -6,8 +6,6 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { api } from "../utils/api";
 import NavigationHeader from "../components/header";
 
-import heroImage from "../../public/hero.png";
-
 const Home: NextPage = () => {
   // const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
@@ -39,7 +37,7 @@ const Home: NextPage = () => {
               </div>
             </div>
             <div className="pr-32 justify-end">
-              <img src={heroImage.src} className="-scale-x-100 right-0 translate-y-1/4"></img>
+              <img src={'/hero.png'} className="-scale-x-100 right-0 translate-y-1/4"></img>
             </div>
           </div>
           <div className="spacer layer1"></div>
