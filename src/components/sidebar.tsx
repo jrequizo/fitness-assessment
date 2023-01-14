@@ -42,7 +42,7 @@ export const SidebarInstance: React.FC = () => {
             },
             {
                 title: "Form Results",
-                path: "/results"
+                path: "/results/form"
             }
         ]}
     />

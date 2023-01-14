@@ -75,10 +75,3 @@ model Form {
     height      Int
     weight      Int
 }
-
-model UserKey {
-    id      String @id @default(cuid())
-    email   String
-
-    @@unique([id, email])
-}

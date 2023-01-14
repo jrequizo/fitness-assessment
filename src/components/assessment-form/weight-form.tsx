@@ -18,6 +18,7 @@ const WeightForm: React.FC<WeightFormProps> = (props) => {
     props.controller.validate = validate;
 
     function validate() {
+        // Call to get form validation from react-hook-form
         handleSubmit((data) => { })();
 
         const { weight: weightRaw } = getValues();

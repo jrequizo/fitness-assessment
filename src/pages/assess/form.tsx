@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 import { useState } from "react";
 
@@ -17,10 +18,16 @@ import React from "react";
 import { api } from "../../utils/api";
 
 const Details: NextPage = () => {
+    const router = useRouter();
 
     const createForm = api.form.create.useMutation({
         onSuccess(data, variables, context) {
-            console.log(data);
+            router.push({
+                pathname: `/results/${data.id}`,
+                query: {
+                    parsed: true
+                }
+            });
         },
     })
 

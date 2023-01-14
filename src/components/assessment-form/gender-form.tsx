@@ -10,7 +10,7 @@ interface GenderFormProps extends FormProps {
 }
 
 interface GenderFormInput {
-    gender: "Male" | "Female" | "Unspecified" | "N/A" | ""
+    gender: "Male" | "Female" | "Trans" | "Prefer not to answer" | ""
 }
 
 const GenderForm: React.FC<GenderFormProps> = (props) => {
@@ -52,8 +52,8 @@ const GenderForm: React.FC<GenderFormProps> = (props) => {
                         <option value="" disabled hidden>Select your gender...</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
-                        <option value="Unspecified">Unspecified</option>
-                        <option value="N/A">Prefer not to answer</option>
+                        <option value="Trans">Transgender</option>
+                        <option value="Prefer not to answer">Prefer not to answer</option>
                     </select>
                 </Tooltip>
             </div>

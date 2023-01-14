@@ -8,20 +8,21 @@ import { useSession } from "next-auth/react";
 
 import moment from 'moment';
 
-import NavigationHeader from "../../components/header";
-import { SidebarInstance } from "../../components/sidebar";
+import NavigationHeader from "../../../components/header";
+import { SidebarInstance } from "../../../components/sidebar";
 
-import { api } from "../../utils/api";
+import { api } from "../../../utils/api";
 import { Form } from "@prisma/client";
 import { Column, useTable } from "react-table";
-import { CircleNotch } from "phosphor-react";
+import { CaretDoubleLeft, CaretDoubleRight, CaretLeft, CaretRight, CircleNotch } from "phosphor-react";
+import Link from "next/link";
 
 const Result: NextPage = () => {
     const { status } = useSession();
     const router = useRouter();
 
     const [page, setPage] = React.useState(1);
-    const [count, setCount] = React.useState(25);
+    const [count, setCount] = React.useState(200);
 
     const [data, setData] = React.useState<Form[]>([]);
 
@@ -31,11 +32,29 @@ const Result: NextPage = () => {
     }, {
         // onSuccess: setData,
         onSuccess: (data) => {
-            setData([...data, ...data, ...data])
+            setData(data);
         },
     });
 
     const columns: Column[] = React.useMemo(() => [
+        {
+            id: "index",
+            Header: "",
+            accessor: (row, index) => {
+                return index + 1;
+            }
+        },
+        {
+            id: "id",
+            Header: "UID",
+            accessor: (row) => {
+                return (
+                    <Link href={`/results/${(row as Form).id}?parsed=true`} className="hover:text-slate-400">
+                        {(row as Form).id}
+                    </Link>
+                )
+            }
+        },
         {
             Header: "First Name",
             accessor: "givenName"
@@ -91,7 +110,36 @@ const Result: NextPage = () => {
 
                     {/** Main Body */}
                     <div className="flex flex-col flex-1 p-4">
+                        <div className="flex flex-row justify-center space-x-2 mb-2">
+                            <button className="border rounded bg-slate-800 border-slate-800 aspect-square flex justify-center items-center hover:bg-slate-600 hover:border-slate-600">
+                                <CaretDoubleLeft size={16} color="#FFFFFF" weight="bold"/>
+                            </button>
+                            <button className="border rounded bg-slate-800 border-slate-800 aspect-square flex justify-center items-center hover:bg-slate-600 hover:border-slate-600">
+                                <CaretLeft size={16} color="#FFFFFF"/>
+                            </button>
 
+                            <div className="flex flex-row space-x-2">
+                                <p>Page: </p>
+                                <select>
+                                    <option value={1}>1</option>
+                                </select>
+                                <p className="text-gray-100">|</p>
+                                <p>Per page: </p>
+                                <select>
+                                    <option value={25}>25</option>
+                                    <option value={50}>50</option>
+                                    <option value={75}>75</option>
+                                    <option value={100}>100</option>
+                                </select>
+                            </div>
+
+                            <button className="border rounded bg-slate-800 border-slate-800 aspect-square flex justify-center items-center hover:bg-slate-600 hover:border-slate-600">
+                                <CaretRight size={16} color="#FFFFFF"/>
+                            </button>
+                            <button className="border rounded bg-slate-800 border-slate-800 aspect-square flex justify-center items-center hover:bg-slate-600 hover:border-slate-600">
+                                <CaretDoubleRight size={16} color="#FFFFFF" weight="bold"/>
+                            </button>
+                        </div>
                         {isLoading ?
                             // Simple loading icon while the table data is fetched
                             <div className="w-full h-full flex items-center justify-center">

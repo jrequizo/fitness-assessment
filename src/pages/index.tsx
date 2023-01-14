@@ -29,7 +29,7 @@ const Home: NextPage = () => {
                 <p className="py-4">Take the free assessment today to find out how you could improve your quality of movement.</p>
               </div>
               <div className="w-[50%] flex flex-row py-4">
-                <Link href="/assess" target="_self" className="p-2 rounded bg-slate-800 hover:bg-slate-500 transition">
+                <Link href="/assess/get-started" target="_self" className="p-2 rounded bg-slate-800 hover:bg-slate-500 transition">
                   <div>
                     <p className="font-semibold text-white">
                       Get Started

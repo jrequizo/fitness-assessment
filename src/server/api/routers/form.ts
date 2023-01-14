@@ -7,7 +7,7 @@ export const formRouter = createTRPCRouter({
     .input(z.object({
       givenName: z.string(),
       surname: z.string(),
-      gender: z.enum(["Male", "Female", "Unspecified", "N/A"]),
+      gender: z.enum(["Male", "Female", "Trans", "Prefer not to answer"]),
       dob: z.date(),
       height: z.number(),
       weight: z.number(),
@@ -25,20 +25,21 @@ export const formRouter = createTRPCRouter({
         }
       });
 
-      return {
-        success: true
-      }
-      // TODO: parse the data
-
-      // TODO: return the parsed data back to the user 
-
-      // return {
-      //   greeting: `Hello ${input.name}`,
-      // };
+      return result;
     }),
 
   getAll: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.form.findMany();
+  }),
+
+  getById: publicProcedure.input(z.object({
+    id: z.string()
+  })).query(async ({ input, ctx}) => {
+    return await ctx.prisma.form.findUnique({
+      where: {
+        id: input.id
+      }
+    })
   }),
 
   get: protectedProcedure.input(z.object({
