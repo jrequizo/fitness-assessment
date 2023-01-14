@@ -30,7 +30,6 @@ const Result: NextPage = () => {
     const [url, setUrl] = React.useState("");
 
     useEffect(() => {
-        console.log();
         setUrl(`${window.location.host}${window.location.pathname}${shareParsed ? "?parsed=true" : ""}`);
     }, [shareParsed])
 

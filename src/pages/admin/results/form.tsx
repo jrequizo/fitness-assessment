@@ -48,7 +48,7 @@ const Result: NextPage = () => {
             id: "index",
             Header: "",
             accessor: (row, index) => {
-                return index + 1;
+                return index + 1 + ((page - 1) * count);
             }
         },
         {
@@ -60,7 +60,7 @@ const Result: NextPage = () => {
                         {(row as Form).id}
                     </Link>
                 )
-            }
+            },
         },
         {
             Header: "First Name",
@@ -91,7 +91,7 @@ const Result: NextPage = () => {
             Header: "Weight",
             accessor: "weight"
         }
-    ], []);
+    ], [page, count]);
 
     useEffect(() => {
         if (status === "unauthenticated") {
@@ -222,7 +222,7 @@ const Result: NextPage = () => {
 
 interface TableProps<T extends object = {}> {
     columns: Column<T>[],
-    data: T[],
+    data: T[]
 }
 
 const Table: React.FC<TableProps> = <T extends object>(props: TableProps<T>) => {
@@ -300,7 +300,9 @@ const Table: React.FC<TableProps> = <T extends object>(props: TableProps<T>) => 
 
                                                 {
                                                     // Render the cell contents
-                                                    cell.render('Cell')
+                                                    cell.render('Cell', {
+
+                                                    })
                                                 }
                                             </td>
                                         )
